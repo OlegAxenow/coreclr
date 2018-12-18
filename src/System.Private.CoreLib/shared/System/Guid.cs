@@ -704,13 +704,13 @@ namespace System
             ReadOnlySpan<byte> charToHexLookup = Number.CharToHexLookup;
             uint numValue;
             result = 0;
-
+        
             // First char
             int num = value[0];
-            
+
             // Can start only with hex digit or "+" (43 < charToHexLookup.Length); "0x" means '0' for num
             if ((uint)num >= (uint)charToHexLookup.Length)
-                goto FalseExit;
+                return false;
 
             if ((numValue = charToHexLookup[num]) == 0xFF)
                 goto FirstCharNotHex;
@@ -725,20 +725,20 @@ namespace System
                 if ((num | 0x20) == 'x' && result == 0)
                     goto ThirdChar;
 
-                goto FalseExit;
+                return false;
             }
                 
             result = 16 * result + numValue;
         ThirdChar:
             num = value[2];
             if ((uint)num >= (uint)charToHexLookup.Length || (numValue = charToHexLookup[num]) == 0xFF)
-                goto FalseExit;
+                return false;
 
             result = 16 * result + numValue;
         FourthChar:
             num = value[3];
             if ((uint)num >= (uint)charToHexLookup.Length || (numValue = charToHexLookup[num]) == 0xFF)
-                goto FalseExit;
+                return false;
 
             result = 16 * result + numValue;
 
@@ -749,11 +749,11 @@ namespace System
             {
                 num = value[1];
                 if ((uint)num >= (uint)charToHexLookup.Length || (numValue = charToHexLookup[num]) == 0xFF)
-                    goto FalseExit;
+                    return false;
             }
             else
             {
-                goto FalseExit;
+                return false;
             }
 
             // If "+0", can be "+0x"
@@ -764,7 +764,7 @@ namespace System
                     goto FourthChar;
 
                 if ((uint)num >= (uint)charToHexLookup.Length || (numValue = charToHexLookup[num]) == 0xFF)
-                    goto FalseExit;
+                    return false;
 
                 result = numValue;
                 goto FourthChar;
@@ -772,9 +772,6 @@ namespace System
 
             result = numValue;
             goto ThirdChar;
-        FalseExit:
-            result = 0;
-            return false;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
