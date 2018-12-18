@@ -428,35 +428,39 @@ namespace System
                 ref Guid g = ref result._parsedGuid;
 
                 uint uintTmp;
-                uint uintTmp2 = 0;
-
+                
                 if (!TryParseHexD(guidString.Slice(0, 4), out uintTmp) ||
-                    !TryParseHexN(guidString.Slice(4, 4), ref uintTmp2))
+                    !TryParseHexN(guidString.Slice(4, 4), ref Unsafe.As<int, uint>(ref g._a)))
                     goto FalseExit;
-                g._a = (int)((uintTmp << 16) + uintTmp2);
+                g._a += (int)(uintTmp << 16);
 
-                if (!TryParseHexD(guidString.Slice(9, 4), out uintTmp) ||
-                    !TryParseHexD(guidString.Slice(14, 4), out uintTmp2))
+                if (!TryParseHexD(guidString.Slice(9, 4), out uintTmp))
                     goto FalseExit;
-
                 g._b = (short)uintTmp;
-                g._c = (short)uintTmp2;
 
-                if (!TryParseHexD(guidString.Slice(19, 4), out uintTmp) ||
-                    !TryParseHexD(guidString.Slice(24, 4), out uintTmp2))
+                if (!TryParseHexD(guidString.Slice(14, 4), out uintTmp))
+                    goto FalseExit;
+                g._c = (short)uintTmp;
+
+                if (!TryParseHexD(guidString.Slice(19, 4), out uintTmp))
                     goto FalseExit;
                 g._d = (byte)(uintTmp >> 8);
                 g._e = (byte)uintTmp;
-                g._f = (byte)(uintTmp2 >> 8);
-                g._g = (byte)uintTmp2;
 
-                if (!TryParseHexN(guidString.Slice(28, 4), ref uintTmp) ||
-                    !TryParseHexN(guidString.Slice(32, 4), ref uintTmp2))
+                if (!TryParseHexD(guidString.Slice(24, 4), out uintTmp))
+                    goto FalseExit;
+                g._f = (byte)(uintTmp >> 8);
+                g._g = (byte)uintTmp;
+
+                if (!TryParseHexN(guidString.Slice(28, 4), ref uintTmp))
                     goto FalseExit;
                 g._h = (byte)(uintTmp >> 8);
                 g._i = (byte)uintTmp;
-                g._j = (byte)(uintTmp2 >> 8);
-                g._k = (byte)uintTmp2;
+
+                if (!TryParseHexN(guidString.Slice(32, 4), ref uintTmp))
+                    goto FalseExit;
+                g._j = (byte)(uintTmp >> 8);
+                g._k = (byte)uintTmp;
             }
 
             return true;
@@ -480,35 +484,39 @@ namespace System
                 ref Guid g = ref result._parsedGuid;
 
                 uint uintTmp = 0;
-                uint uintTmp2 = 0;
-
+                
                 if (!TryParseHexN(guidString.Slice(0, 4), ref uintTmp) ||
-                    !TryParseHexN(guidString.Slice(4, 4), ref uintTmp2))
+                    !TryParseHexN(guidString.Slice(4, 4), ref Unsafe.As<int, uint>(ref g._a)))
                     goto FalseExit;
-                g._a = (int)((uintTmp << 16) + uintTmp2);
+                g._a += (int)(uintTmp << 16);
 
-                if (!TryParseHexN(guidString.Slice(8, 4), ref uintTmp) ||
-                    !TryParseHexN(guidString.Slice(12, 4), ref uintTmp2))
+                if (!TryParseHexN(guidString.Slice(8, 4), ref uintTmp))
                     goto FalseExit;
-
                 g._b = (short)uintTmp;
-                g._c = (short)uintTmp2;
 
-                if (!TryParseHexN(guidString.Slice(16, 4), ref uintTmp) ||
-                    !TryParseHexN(guidString.Slice(20, 4), ref uintTmp2))
+                if (!TryParseHexN(guidString.Slice(12, 4), ref uintTmp))
+                    goto FalseExit;
+                g._c = (short)uintTmp;
+
+                if (!TryParseHexN(guidString.Slice(16, 4), ref uintTmp))
                     goto FalseExit;
                 g._d = (byte)(uintTmp >> 8);
                 g._e = (byte)uintTmp;
-                g._f = (byte)(uintTmp2 >> 8);
-                g._g = (byte)uintTmp2;
 
-                if (!TryParseHexN(guidString.Slice(24, 4), ref uintTmp) ||
-                    !TryParseHexN(guidString.Slice(28, 4), ref uintTmp2))
+                if (!TryParseHexN(guidString.Slice(20, 4), ref uintTmp))
+                    goto FalseExit;
+                g._f = (byte)(uintTmp >> 8);
+                g._g = (byte)uintTmp;
+
+                if (!TryParseHexN(guidString.Slice(24, 4), ref uintTmp))
                     goto FalseExit;
                 g._h = (byte)(uintTmp >> 8);
                 g._i = (byte)uintTmp;
-                g._j = (byte)(uintTmp2 >> 8);
-                g._k = (byte)uintTmp2;
+
+                if (!TryParseHexN(guidString.Slice(28, 4), ref uintTmp))
+                    goto FalseExit;
+                g._j = (byte)(uintTmp >> 8);
+                g._k = (byte)uintTmp;
             }
 
             return true;
