@@ -450,13 +450,11 @@ namespace System
                 g._f = (byte)(uintTmp2 >> 8);
                 g._g = (byte)uintTmp2;
 
-                if (!TryParseHexN(guidString.Slice(28, 4), ref uintTmp) ||
-                    !TryParseHexN(guidString.Slice(32, 4), ref uintTmp2))
+                if (!TryParseHexByte(guidString.Slice(28, 2), ref g._h) ||
+                    !TryParseHexByte(guidString.Slice(30, 2), ref g._i) ||
+                    !TryParseHexByte(guidString.Slice(32, 2), ref g._j) ||
+                    !TryParseHexByte(guidString.Slice(34, 2), ref g._k))
                     goto FalseExit;
-                g._h = (byte)(uintTmp >> 8);
-                g._i = (byte)uintTmp;
-                g._j = (byte)(uintTmp2 >> 8);
-                g._k = (byte)uintTmp2;
             }
 
             return true;
@@ -502,13 +500,11 @@ namespace System
                 g._f = (byte)(uintTmp2 >> 8);
                 g._g = (byte)uintTmp2;
 
-                if (!TryParseHexN(guidString.Slice(24, 4), ref uintTmp) ||
-                    !TryParseHexN(guidString.Slice(28, 4), ref uintTmp2))
+                if (!TryParseHexByte(guidString.Slice(24, 2), ref g._h) ||
+                    !TryParseHexByte(guidString.Slice(26, 2), ref g._i) ||
+                    !TryParseHexByte(guidString.Slice(28, 2), ref g._j) ||
+                    !TryParseHexByte(guidString.Slice(30, 2), ref g._k))
                     goto FalseExit;
-                g._h = (byte)(uintTmp >> 8);
-                g._i = (byte)uintTmp;
-                g._j = (byte)(uintTmp2 >> 8);
-                g._k = (byte)uintTmp2;
             }
 
             return true;
@@ -805,6 +801,28 @@ namespace System
             if ((uint)num >= (uint)charToHexLookup.Length || (numValue = charToHexLookup[num]) == 0xFF)
                 return false;
             result = 16 * result + numValue;
+
+            return true;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private static bool TryParseHexByte(ReadOnlySpan<char> value, ref byte result)
+        {
+            Debug.Assert(value.Length == 2,
+                "Expects exact 2 characters (guaranteed, because called only from TryParseExactN and TryParseExactD)");
+            ReadOnlySpan<byte> charToHexLookup = Number.CharToHexLookup;
+
+            int num = value[0];
+            byte numValue;
+
+            if ((uint)num >= (uint)charToHexLookup.Length || (numValue = charToHexLookup[num]) == 0xFF)
+                return false;
+            result = numValue;
+
+            num = value[1];
+            if ((uint)num >= (uint)charToHexLookup.Length || (numValue = charToHexLookup[num]) == 0xFF)
+                return false;
+            result = (byte)(16 * result + numValue);
 
             return true;
         }
