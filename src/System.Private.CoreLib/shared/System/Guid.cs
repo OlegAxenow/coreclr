@@ -492,14 +492,12 @@ namespace System
                 g._b = (short)uintTmp;
                 g._c = (short)uintTmp2;
 
-                if (!TryParseHexN(guidString.Slice(16, 4), ref uintTmp) ||
-                    !TryParseHexN(guidString.Slice(20, 4), ref uintTmp2))
+                if (!TryParseHexByte(guidString.Slice(16, 2), ref g._d) ||
+                    !TryParseHexByte(guidString.Slice(18, 2), ref g._e) ||
+                    !TryParseHexByte(guidString.Slice(20, 2), ref g._f) ||
+                    !TryParseHexByte(guidString.Slice(22, 2), ref g._g))
                     goto FalseExit;
-                g._d = (byte)(uintTmp >> 8);
-                g._e = (byte)uintTmp;
-                g._f = (byte)(uintTmp2 >> 8);
-                g._g = (byte)uintTmp2;
-
+                
                 if (!TryParseHexByte(guidString.Slice(24, 2), ref g._h) ||
                     !TryParseHexByte(guidString.Slice(26, 2), ref g._i) ||
                     !TryParseHexByte(guidString.Slice(28, 2), ref g._j) ||
